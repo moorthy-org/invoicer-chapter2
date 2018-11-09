@@ -10,7 +10,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"html"
+	//"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -67,11 +68,13 @@ func main() {
 	r.HandleFunc("/", iv.getIndex).Methods("GET")
 	r.HandleFunc("/__heartbeat__", getHeartbeat).Methods("GET")
 	r.HandleFunc("/invoice/{id:[0-9]+}", iv.getInvoice).Methods("GET")
+	/*
 	r.HandleFunc("/invoice", iv.postInvoice).Methods("POST")
 	r.HandleFunc("/invoice/{id:[0-9]+}", iv.putInvoice).Methods("PUT")
 	r.HandleFunc("/invoice/{id:[0-9]+}", iv.deleteInvoice).Methods("DELETE")
 	r.HandleFunc("/invoice/delete/{id:[0-9]+}", iv.deleteInvoice).Methods("GET")
 	r.HandleFunc("/__version__", getVersion).Methods("GET")
+	*/
 
 	// handle static files
 	r.Handle("/statics/{staticfile}",
@@ -109,7 +112,7 @@ func (iv *invoicer) getInvoice(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	log.Println("getting invoice id", vars["id"])
 	var i1 Invoice
-	id, _ := strconv.Atoi(vars["id"])
+	id, _ := strconv.Atoi(html.EscapeString(vars["id"]))
 	iv.db.First(&i1, id)
 	fmt.Printf("%+v\n", i1)
 	if i1.ID == 0 {
@@ -130,7 +133,7 @@ func (iv *invoicer) getInvoice(w http.ResponseWriter, r *http.Request) {
 	al := appLog{Message: fmt.Sprintf("retrieved invoice %d", i1.ID), Action: "get-invoice"}
 	al.log(r)
 }
-
+/*
 func (iv *invoicer) postInvoice(w http.ResponseWriter, r *http.Request) {
 	log.Println("posting new invoice")
 	body, err := ioutil.ReadAll(r.Body)
@@ -190,7 +193,7 @@ func (iv *invoicer) deleteInvoice(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	log.Println("deleting invoice", vars["id"])
 	var i1 Invoice
-	id, _ := strconv.Atoi(vars["id"])
+	id, _ := strconv.Atoi(html.EscapeString(vars["id"]))
 	iv.db.Where("invoice_id = ?", id).Delete(Charge{})
 	i1.ID = uint(id)
 	iv.db.Delete(&i1)
@@ -199,7 +202,7 @@ func (iv *invoicer) deleteInvoice(w http.ResponseWriter, r *http.Request) {
 	al := appLog{Message: fmt.Sprintf("deleted invoice %d", i1.ID), Action: "delete-invoice"}
 	al.log(r)
 }
-
+*/
 func (iv *invoicer) getIndex(w http.ResponseWriter, r *http.Request) {
 	log.Println("serving index page")
 	w.Header().Add("Content-Security-Policy", "default-src 'self';child-src 'self';")
@@ -236,6 +239,7 @@ func getHeartbeat(w http.ResponseWriter, r *http.Request) {
 }
 
 // handleVersion returns the current version of the API
+/*
 func getVersion(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(fmt.Sprintf(`{
 "source": "https://github.com/Securing-DevOps/invoicer",
@@ -244,3 +248,4 @@ func getVersion(w http.ResponseWriter, r *http.Request) {
 "build": "https://circleci.com/gh/Securing-DevOps/invoicer/"
 }`, version, commit)))
 }
+*/
