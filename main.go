@@ -356,12 +356,12 @@ func (iv *invoicer) getOAuth2Callback(w http.ResponseWriter, r *http.Request) {
 	resp.Body.Read(buf)
 	fmt.Printf("%s\n", buf)
 	var up UserProfile
-	err = json.Unmarshal(buf, &up)
-	if err != nil {
-		w.WriteHeader(http.StatusExpectationFailed)
-		w.Write([]byte("Failed to parse user information from " + string(buf)))
-		return
-	}
+	// err = json.Unmarshal(buf, &up)
+	// if err != nil {
+	// 	w.WriteHeader(http.StatusExpectationFailed)
+	// 	w.Write([]byte("Failed to parse user information from " + string(buf)))
+	// 	return
+	// }
 
 	// Create a session, save it and return a cookie
 	session, err := iv.store.Get(r, "session")
