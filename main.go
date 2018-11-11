@@ -93,6 +93,9 @@ func main() {
 	r.HandleFunc("/invoice/delete/{id:[0-9]+}", iv.deleteInvoice).Methods("GET")
 	r.HandleFunc("/__version__", getVersion).Methods("GET")
 
+	r.HandleFunc("/authenticate", iv.getAuthenticate).Methods("GET")
+	r.HandleFunc("/oauth2callback", iv.getOAuth2Callback).Methods("GET")
+
 	// handle static files
 	r.Handle("/statics/{staticfile}",
 		http.StripPrefix("/statics/", http.FileServer(http.Dir("./statics"))),
