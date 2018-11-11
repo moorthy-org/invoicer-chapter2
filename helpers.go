@@ -20,7 +20,6 @@ func newRequestID() string {
 	return string(b)
 }
 
-
 func httpError(w http.ResponseWriter, r *http.Request, errorCode int, errorMessage string, args ...interface{}) {
 	al := appLog{ErrorCode: errorCode, Message: fmt.Sprintf(errorMessage, args...)}
 	al.log(r)
