@@ -10,7 +10,7 @@ fail() {
     exit 1
 }
 
-export AWS_DEFAULT_REGION=${AWS_REGION:-ap-southeast-1} 
+export AWS_DEFAULT_REGION=${AWS_REGION:-ap-southeast-1}
 
 datetag=$(date +%Y%m%d%H%M)
 identifier=$(whoami)-sec-$datetag
@@ -44,7 +44,7 @@ aws rds create-db-instance \
     --allocated-storage "$dbstorage" \
     --db-instance-class "$dbinstclass" \
     --engine postgres \
-    --engine-version 9.6.2 \
+    --engine-version 10.5 \
     --auto-minor-version-upgrade \
     --publicly-accessible \
     --master-username invoicer \
